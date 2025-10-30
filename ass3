@@ -1,0 +1,280 @@
+#include <iostream>
+using namespace std;
+#define MAX 5
+int stack[MAX];
+int top = -1;
+
+void push(int val) {
+    if (top == MAX - 1)
+        cout << "Stack Overflow!" << endl;
+    else {
+        top++;
+        stack[top] = val;
+        cout << val << " pushed into stack." << endl;
+    }
+}
+
+void pop() {
+    if (top == -1)
+        cout << "Stack Underflow!" << endl;
+    else {
+        cout << stack[top] << " popped from stack." << endl;
+        top--;
+    }
+}
+
+
+void peek() {
+    if (top == -1)
+        cout << "Stack is empty!" << endl;
+    else
+        cout << "Top element: " << stack[top] << endl;
+}
+
+void display() {
+    if (top == -1)
+        cout << "Stack is empty!" << endl;
+    else {
+        cout << "Stack elements: ";
+        for (int i = top; i >= 0; i--)
+            cout << stack[i] << " ";
+        cout << endl;
+    }
+}
+
+void isEmpty() {
+    if (top == -1)
+        cout << "Stack is Empty" << endl;
+    else
+        cout << "Stack is not Empty" << endl;
+}
+
+void isFull() {
+    if (top == MAX - 1)
+        cout << "Stack is Full" << endl;
+    else
+        cout << "Stack is not Full" << endl;
+}
+
+int main() {
+    int choice, val;
+    do {
+        cout << "\n Stack Menu \n";
+        cout << "\n1. Push\n2. Pop\n3. Peek\n4. Display\n5. isEmpty\n6. isFull\n7. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to push: ";
+                cin >> val;
+                push(val);
+                break;
+            case 2:
+                pop();
+                break;
+            case 3:
+                peek();
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                isEmpty();
+                break;
+            case 6:
+                isFull();
+                break;
+            case 7:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }
+    } while (choice != 7);
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define MAX 100
+char stack[MAX];
+int top = -1;
+void push(char ch) {
+    stack[++top] = ch;
+}
+char pop() {
+    return stack[top--];
+}
+
+int main() {
+    char str[100];
+    cout << "Enter a string: ";
+    cin >> str;
+
+    for (int i = 0; str[i] != '\0'; i++)
+        push(str[i]);
+
+    cout << "Reversed string: ";
+    while (top != -1)
+        cout << pop();
+
+    cout << endl;
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define MAX 100
+char stack[MAX];
+int top = -1;
+
+void push(char c) { stack[++top] = c; }
+char pop() { return (top == -1) ? '\0' : stack[top--]; }
+
+bool isMatchingPair(char open, char close) {
+    return (open == '(' && close == ')') ||
+           (open == '{' && close == '}') ||
+           (open == '[' && close == ']');
+}
+
+bool isBalanced(char exp[]) {
+    for (int i = 0; exp[i] != '\0'; i++) {
+        if (exp[i] == '(' || exp[i] == '{' || exp[i] == '[')
+            push(exp[i]);
+        else if (exp[i] == ')' || exp[i] == '}' || exp[i] == ']') {
+            if (top == -1 || !isMatchingPair(pop(), exp[i]))
+                return false;
+        }
+    }
+    return (top == -1);
+}
+
+int main() {
+    char exp[100];
+    cout << "Enter an expression: ";
+    cin >> exp;
+
+    if (isBalanced(exp))
+        cout << "Balanced Parentheses" << endl;
+    else
+        cout << "Unbalanced Parentheses" << endl;
+
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define MAX 100
+char stack[MAX];
+int top = -1;
+
+void push(char c) { stack[++top] = c; }
+char pop() { return stack[top--]; }
+char peek() { return stack[top]; }
+bool isEmpty() { return top == -1; }
+
+int precedence(char c) {
+    if (c == '^') return 3;
+    else if (c == '*' || c == '/') return 2;
+    else if (c == '+' || c == '-') return 1;
+    else return -1;
+}
+
+void infixToPostfix(char* exp) {
+    char output[100];
+    int k = 0;
+    for (int i = 0; exp[i] != '\0'; i++) {
+        char c = exp[i];
+
+       if ((c >= 'A' && c <= 'Z') || 
+           (c >= 'a' && c <= 'z') || 
+           (c >= '0' && c <= '9'))
+       output[k++] = c;
+  
+        else if (c == '(')
+            push(c);
+
+
+        else if (c == ')') {
+            while (!isEmpty() && peek() != '(')
+                output[k++] = pop();
+            pop(); // remove '('
+        }
+
+      
+        else {
+            while (!isEmpty() && precedence(peek()) >= precedence(c))
+                output[k++] = pop();
+            push(c);
+        }
+    }
+
+    while (!isEmpty())
+        output[k++] = pop();
+
+    output[k] = '\0';
+    cout << "Postfix Expression: " << output << endl;
+}
+
+int main() {
+    char exp[100];
+    cout << "Enter infix expression: ";
+    cin >> exp;
+    infixToPostfix(exp);
+    return 0;
+}
+
+
+
+#include <iostream>
+#include <math>
+using namespace std;
+#define MAX 100
+int stack[MAX];
+int top = -1;
+
+void push(int val) {
+stack[++top] = val; 
+}
+int pop() { 
+return stack[top--];
+}
+
+int evaluatePostfix(string exp) {
+    for (int i = 0; i < exp.length(); i++) {
+        char c = exp[i];
+
+        if (isdigit(c))
+            push(c - '0');
+        else {
+            int val2 = pop();
+            int val1 = pop();
+            switch (c) {
+                case '+': push(val1 + val2); break;
+                case '-': push(val1 - val2); break;
+                case '*': push(val1 * val2); break;
+                case '/': push(val1 / val2); break;
+                case '^': push(pow(val1, val2)); break;
+            }
+        }
+    }
+    return pop();
+}
+
+int main() {
+    string exp;
+    cout << "Enter postfix expression: ";
+    cin >> exp;
+    cout << "Result: " << evaluatePostfix(exp) << endl;
+    return 0;
+}
