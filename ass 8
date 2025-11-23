@@ -1,0 +1,378 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left, *right;
+    Node(int v){
+        data=v;
+        left=right=NULL;
+    }
+};
+
+Node* create(){
+    int x;
+    cin>>x;
+    if(x==-1) return NULL;
+    Node* p=new Node(x);
+    p->left=create();
+    p->right=create();
+    return p;
+}
+
+void preorder(Node* root){
+    if(!root) return;
+    cout<<root->data<<" ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+void inorder(Node* root){
+    if(!root) return;
+    inorder(root->left);
+    cout<<root->data<<" ";
+    inorder(root->right);
+}
+
+void postorder(Node* root){
+    if(!root) return;
+    postorder(root->left);
+    postorder(root->right);
+    cout<<root->data<<" ";
+}
+
+int main(){
+    Node* root=create();
+    preorder(root);  cout<<"\n";
+    inorder(root);   cout<<"\n";
+    postorder(root);
+}
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left,*right;
+    Node(int v){
+        data=v;
+        left=right=NULL;
+    }
+};
+
+Node* insertBST(Node* root,int x){
+    if(!root) return new Node(x);
+    if(x<root->data) root->left=insertBST(root->left,x);
+    else if(x>root->data) root->right=insertBST(root->right,x);
+    return root;
+}
+
+Node* searchRec(Node* root,int key){
+    if(!root || root->data==key) return root;
+    if(key<root->data) return searchRec(root->left,key);
+    else return searchRec(root->right,key);
+}
+
+Node* searchIter(Node* root,int key){
+    Node* curr=root;
+    while(curr){
+        if(key==curr->data) return curr;
+        else if(key<curr->data) curr=curr->left;
+        else curr=curr->right;
+    }
+    return NULL;
+}
+
+Node* findMin(Node* root){
+    if(!root) return NULL;
+    while(root->left) root=root->left;
+    return root;
+}
+
+Node* findMax(Node* root){
+    if(!root) return NULL;
+    while(root->right) root=root->right;
+    return root;
+}
+
+Node* inorderSuccessor(Node* root,int key){
+    Node *curr=root,*succ=NULL;
+    while(curr){
+        if(key<curr->data){
+            succ=curr;
+            curr=curr->left;
+        } else if(key>curr->data){
+            curr=curr->right;
+        } else break;
+    }
+    if(!curr) return NULL;
+    if(curr->right) return findMin(curr->right);
+    return succ;
+}
+
+Node* inorderPredecessor(Node* root,int key){
+    Node *curr=root,*pred=NULL;
+    while(curr){
+        if(key>curr->data){
+            pred=curr;
+            curr=curr->right;
+        } else if(key<curr->data){
+            curr=curr->left;
+        } else break;
+    }
+    if(!curr) return NULL;
+    if(curr->left) return findMax(curr->left);
+    return pred;
+}
+
+int main(){
+    Node* root=NULL;
+    int n,x;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        root=insertBST(root,x);
+    }
+    int key;
+    cin>>key;
+
+    Node* r1=searchRec(root,key);
+    Node* r2=searchIter(root,key);
+    if(r1) cout<<"Found(rec)\n"; else cout<<"Not found(rec)\n";
+    if(r2) cout<<"Found(iter)\n"; else cout<<"Not found(iter)\n";
+
+    Node* mn=findMin(root);
+    Node* mx=findMax(root);
+    if(mn) cout<<"Min "<<mn->data<<"\n";
+    if(mx) cout<<"Max "<<mx->data<<"\n";
+
+    Node* suc=inorderSuccessor(root,key);
+    Node* pre=inorderPredecessor(root,key);
+    if(suc) cout<<"Succ "<<suc->data<<"\n"; else cout<<"No Succ\n";
+    if(pre) cout<<"Pred "<<pre->data<<"\n"; else cout<<"No Pred\n";
+
+    return 0;
+}
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left,*right;
+    Node(int v){ data=v; left=right=NULL; }
+};
+
+Node* insertBST(Node* root,int x){
+    if(!root) return new Node(x);
+    if(x < root->data) root->left = insertBST(root->left,x);
+    else if(x > root->data) root->right = insertBST(root->right,x);
+    return root;
+}
+
+Node* findMin(Node* root){
+    while(root->left) root=root->left;
+    return root;
+}
+
+Node* deleteBST(Node* root,int key){
+    if(!root) return root;
+    if(key < root->data) root->left = deleteBST(root->left,key);
+    else if(key > root->data) root->right = deleteBST(root->right,key);
+    else {
+        if(!root->left && !root->right){
+            delete root; 
+            return NULL;
+        }
+        else if(!root->left){
+            Node* t=root->right; delete root; return t;
+        }
+        else if(!root->right){
+            Node* t=root->left; delete root; return t;
+        }
+        else {
+            Node* t=findMin(root->right);
+            root->data=t->data;
+            root->right = deleteBST(root->right,t->data);
+        }
+    }
+    return root;
+}
+
+int maxDepth(Node* root){
+    if(!root) return 0;
+    int l=maxDepth(root->left);
+    int r=maxDepth(root->right);
+    return 1 + (l>r ? l : r);
+}
+
+int minDepth(Node* root){
+    if(!root) return 0;
+    int l=minDepth(root->left);
+    int r=minDepth(root->right);
+    if(!root->left || !root->right) return 1 + max(l,r);
+    return 1 + (l<r ? l : r);
+}
+
+int main(){
+    Node* root=NULL;
+    int n,x;
+    cin>>n;
+    while(n--){ cin>>x; root=insertBST(root,x); }
+
+    int del;
+    cin>>del;
+    root=deleteBST(root,del);
+
+    cout<<"Max Depth = "<<maxDepth(root)<<"\n";
+    cout<<"Min Depth = "<<minDepth(root)<<"\n";
+}
+
+
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *left, *right;
+    Node(int v){
+        data = v;
+        left = right = NULL;
+    }
+};
+
+Node* create(){
+    int x;
+    cin >> x;
+    if(x == -1) return NULL;
+    Node* p = new Node(x);
+    p->left = create();
+    p->right = create();
+    return p;
+}
+
+bool isBSTUtil(Node* root, int &prev){
+    if(!root) return true;
+    if(!isBSTUtil(root->left, prev)) return false;
+    if(root->data <= prev) return false;
+    prev = root->data;
+    return isBSTUtil(root->right, prev);
+}
+
+bool isBST(Node* root){
+    int prev = -1000000000;
+    return isBSTUtil(root, prev);
+}
+
+int main(){
+    Node* root = create();
+    if(isBST(root)) cout << "BST";
+    else cout << "Not BST";
+}
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+void heapify(int a[], int n, int i){
+    int largest=i;
+    int l=2*i+1, r=2*i+2;
+    if(l<n && a[l]>a[largest]) largest=l;
+    if(r<n && a[r]>a[largest]) largest=r;
+    if(largest!=i){
+        swap(a[i],a[largest]);
+        heapify(a,n,largest);
+    }
+}
+
+void heapSort(int a[], int n){
+    for(int i=n/2-1;i>=0;i--) heapify(a,n,i);
+    for(int i=n-1;i>0;i--){
+        swap(a[0],a[i]);
+        heapify(a,i,0);
+    }
+}
+
+int main(){
+    int n, a[100];
+    cin>>n;
+    for(int i=0;i<n;i++) cin>>a[i];
+
+    heapSort(a,n);
+
+    for(int i=0;i<n;i++) cout<<a[i]<<" ";
+}
+
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+int h[100], n=0;
+
+void insertPQ(int x){
+    h[n]=x;
+    int i=n;
+    n++;
+    while(i>0){
+        int p=(i-1)/2;
+        if(h[p]<h[i]){ swap(h[p],h[i]); i=p; }
+        else break;
+    }
+}
+
+int getMax(){
+    if(n==0) return -1;
+    return h[0];
+}
+
+int deleteMax(){
+    if(n==0) return -1;
+    int mx=h[0];
+    h[0]=h[n-1];
+    n--;
+    int i=0;
+    while(true){
+        int l=2*i+1, r=2*i+2, big=i;
+        if(l<n && h[l]>h[big]) big=l;
+        if(r<n && h[r]>h[big]) big=r;
+        if(big!=i){ swap(h[i],h[big]); i=big; }
+        else break;
+    }
+    return mx;
+}
+
+int main(){
+    int m,x;
+    cin>>m;
+    while(m--){
+        cin>>x;
+        insertPQ(x);
+    }
+
+    cout<<getMax()<<" ";
+    cout<<deleteMax()<<" ";
+    cout<<getMax();
+}
+
