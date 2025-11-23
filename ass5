@@ -257,7 +257,7 @@ public:
         temp->next = newNode;
     }
 
-    void deleteAllOccurrences(int key) {
+    void deleteAllOccurred(int key) {
         int count = 0;
         while (head != nullptr && head->data == key) {
             Node* temp = head;
@@ -316,7 +316,7 @@ int main() {
     cout << "\nEnter key to delete: ";
     cin >> key;
 
-    list.deleteAllOccurrences(key);
+    list.deleteAllOccurred(key);
 
     cout << "\nUpdated List:\n";
     list.display();
