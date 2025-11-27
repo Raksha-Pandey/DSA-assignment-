@@ -208,7 +208,7 @@ void infixToPostfix(char* exp) {
         else if (c == ')') {
             while (!isEmpty() && peek() != '(')
                 output[k++] = pop();
-            pop(); // remove '('
+                pop(); 
         }
 
       
