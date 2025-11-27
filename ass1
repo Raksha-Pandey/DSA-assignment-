@@ -91,7 +91,7 @@ void linearSearch(int arr[], int n) {
 int main() {
     int arr[MAX], n = 0, choice;
     do {
-        cout << "\nMENU\n";
+        cout << "MENU";
         cout << "1.CREATE\n2.DISPLAY\n3.INSERT\n4.DELETE\n5.LINEAR SEARCH\n6.EXIT\n";
         cout << "Enter your choice (1-6): ";
         cin >> choice;
@@ -153,7 +153,6 @@ int main() {
 
 
 
-Output: 10000 
 
 
 
@@ -228,10 +227,10 @@ int main() {
 using namespace std;
 
 int main() {
-    const int rows = 3, cols = 3;
+    int rows = 3, cols = 3;
     int a[rows][cols] = { {1,2,3}, {4,5,6}, {7,8,9} };
 
-    // Row sums
+    
     for(int i=0; i<rows; i++) {
         int rowSum = 0;
         for(int j=0; j<cols; j++)
@@ -239,7 +238,7 @@ int main() {
         cout << "Sum of row " << i+1 << " = " << rowSum << endl;
     }
 
-    // Column sums
+    
     for(int j=0; j<cols; j++) {
         int colSum = 0;
         for(int i=0; i<rows; i++)
