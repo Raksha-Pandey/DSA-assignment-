@@ -440,45 +440,54 @@ class Node {
 public:
     char data;
     Node *prev, *next;
+
     Node(char c) {
-        data=c;
-        prev=next=NULL;
+        data = c;
+        prev = next = NULL;
     }
 };
 
 int main() {
     string s;
-    cin>>s;
+    cout << "Enter string: ";
+    cin >> s;
 
-    Node *head=NULL, *tail=NULL;
-    for(char c:s) {
-        Node* p=new Node(c);
-        if(!head) head=tail=p;
-        else {
-            tail->next=p;
-            p->prev=tail;
-            tail=p;
+    Node *head = NULL, *tail = NULL;
+
+    for (int i = 0; i < s.length(); i++) {
+        char c = s[i];
+        Node* p = new Node(c);
+
+        if (!head) {              
+            head = tail = p;
+        } else {                  
+            tail->next = p;
+            p->prev = tail;
+            tail = p;
         }
     }
 
-    if(!head) {
-        cout<<"Palindrome";
+    if (!head) {
+        cout << "Palindrome";
         return 0;
     }
 
-    Node *left=head, *right=tail;
-    bool ok=true;
-    while(left!=right && right->next!=left) {
-        if(left->data!=right->data) {
-            ok=false;
+    Node *left = head, *right = tail;
+    bool ok = true;
+
+    while (left != right && right->next != left) {
+        if (left->data != right->data) {
+            ok = false;
             break;
         }
-        left=left->next;
-        right=right->prev;
+        left = left->next;
+        right = right->prev;
     }
 
-    if(ok && left->data==right->data) cout<<"Palindrome";
-    else cout<<"Not Palindrome";
+    if (ok && left->data == right->data)
+        cout << "Palindrome";
+    else
+        cout << "Not Palindrome";
 
     return 0;
 }
