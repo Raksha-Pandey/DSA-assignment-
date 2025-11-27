@@ -271,7 +271,7 @@ public:
         while (current != nullptr) {
             if (current->data == key) {
                 Node* temp = current;
-                prev->next = current->next;  // unlink
+                prev->next = current->next; 
                 current = current->next;
                 delete temp;
                 count++;
