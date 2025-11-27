@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 void selection(int a[],int n){
@@ -23,43 +24,62 @@ void bubble(int a[],int n){
             if(a[j]>a[j+1]) swap(a[j],a[j+1]);
 }
 
-void mergeArr(int a[],int l,int m,int r){
-    int n1=m-l+1,n2=r-m;
-    int L[50],R[50];
-    for(int i=0;i<n1;i++) L[i]=a[l+i];
-    for(int i=0;i<n2;i++) R[i]=a[m+1+i];
-    int i=0,j=0,k=l;
-    while(i<n1 && j<n2){
-        if(L[i]<=R[j]) a[k++]=L[i++];
-        else a[k++]=R[j++];
+void mergeArr(int a[],int start,int mid,int end){
+    int i = start;
+    int j = mid+1;
+    vector<int>temp;
+    while(i<=mid && j<=end){
+        if(a[i]<=a[j]) {
+        temp.push_back(a[i]);
+        i++;
+        }
+        else{
+         temp.push_back(a[j]);
+         j++;
+         }
+}
+    while(i<=mid){ 
+        temp.push_back(a[i]);
+        i++;
+    } 
+   while(j<=end){ 
+        temp.push_back(a[j]);
+        j++;
+    } 
+   for(int k=0;k<temp.size();k++){
+        a[k+start]=temp[k];
+   }
+
+
+
+void mergeSort(int arr[],int start,int end){
+    if(start<end){
+        int mid=(start+end)/2;
+        mergeSort(arr,start,mid);
+        mergeSort(arr,mid+1,end);
+        mergeArr(arr,start,mid,end);
     }
-    while(i<n1) a[k++]=L[i++];
-    while(j<n2) a[k++]=R[j++];
 }
 
-void mergeSort(int a[],int l,int r){
-    if(l<r){
-        int m=(l+r)/2;
-        mergeSort(a,l,m);
-        mergeSort(a,m+1,r);
-        mergeArr(a,l,m,r);
+int partition(int arr[],int start,int end){
+    int p = arr[end];
+    int index = start-1;
+    for(int j=start;j<end;j++){
+        if(arr[j]<p){ 
+        index++; 
+        swap(arr[j],arr[index]);
     }
+    }
+    index++;
+    swap(arr[index],arr[end]);
+    return index;
 }
 
-int partition(int a[],int l,int r){
-    int p=a[r],i=l-1;
-    for(int j=l;j<r;j++){
-        if(a[j]<p){ i++; swap(a[i],a[j]); }
-    }
-    swap(a[i+1],a[r]);
-    return i+1;
-}
-
-void quickSort(int a[],int l,int r){
-    if(l<r){
-        int p=partition(a,l,r);
-        quickSort(a,l,p-1);
-        quickSort(a,p+1,r);
+void quickSort(int arr[],int start,int end){
+    if(start<end){
+        int pivot_index = partition(arr,start,end);
+        quickSort(arr,start,pivot_index-1);
+        quickSort(arr,pivot_index+1,end);
     }
 }
 
